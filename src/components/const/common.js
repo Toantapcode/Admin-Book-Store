@@ -1,1 +1,0 @@
-export const STATIC_HOST = "https://book-store-bqe8.onrender.com/"
