@@ -134,24 +134,36 @@ const TableBanner = ({ dataChanged, setDataChanged }) => {
             >
                 {editedData && (
                     <div>
-                        {Object.keys(editedData).map((key) => (
-                            <p key={key}>
-                                <strong>{key}:</strong>
-                                {key === 'banner_id' ? (
-                                    <input
-                                        type="number"
-                                        value={editedData[key]}
-                                        onChange={(e) => setEditedData({ ...editedData, [key]: e.target.value })}
-                                    />
-                                ) : (
-                                    <input
-                                        type="text"
-                                        value={editedData[key]}
-                                        onChange={(e) => setEditedData({ ...editedData, [key]: e.target.value })}
-                                    />
-                                )}
-                            </p>
-                        ))}
+                        {Object.keys(editedData)
+                            .filter(key => key !== '_id' && key !== '__v')
+                            .map((key) => (
+                                <p key={key}>
+                                    <strong>{key}:</strong>
+                                    {key === 'banner_id' ? (
+                                        <input
+                                            type="number"
+                                            value={editedData[key]}
+                                            onChange={(e) => setEditedData({ ...editedData, [key]: e.target.value })}
+                                        />
+                                    )
+                                        : key === 'status' ? (
+                                            <select
+                                                value={editedData[key]}
+                                                onChange={(e) => setEditedData({ ...editedData, [key]: e.target.value })}
+                                            >
+                                                <option value="true">True</option>
+                                                <option value="false">False</option>
+                                            </select>
+                                        )
+                                            : (
+                                                <input
+                                                    type="text"
+                                                    value={editedData[key]}
+                                                    onChange={(e) => setEditedData({ ...editedData, [key]: e.target.value })}
+                                                />
+                                            )}
+                                </p>
+                            ))}
                     </div>
                 )}
             </Modal>
