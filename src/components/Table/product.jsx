@@ -160,34 +160,36 @@ const TableProduct = () => {
             >
                 {editedData && (
                     <div>
-                        {Object.keys(editedData).map((key) => (
-                            <p key={key}>
-                                <strong>{key}:</strong>
-                                {key === 'quantity' ? (
-                                    <div>
-                                        <label>In Stock:</label>
+                        {Object.keys(editedData)
+                            .filter(key => key !== '_id' && key !== '__v')
+                            .map((key) => (
+                                <p key={key}>
+                                    <strong>{key}:</strong>
+                                    {key === 'quantity' ? (
+                                        <div>
+                                            <label>In Stock:</label>
+                                            <input
+                                                type="number"
+                                                value={editedData[key].inStock}
+                                                onChange={(e) => setEditedData({ ...editedData, [key]: { ...editedData[key], inStock: e.target.value } })}
+                                            />
+                                            <br />
+                                            <label>Sold:</label>
+                                            <input
+                                                type="number"
+                                                value={editedData[key].sold}
+                                                onChange={(e) => setEditedData({ ...editedData, [key]: { ...editedData[key], sold: e.target.value } })}
+                                            />
+                                        </div>
+                                    ) : (
                                         <input
-                                            type="number"
-                                            value={editedData[key].inStock}
-                                            onChange={(e) => setEditedData({ ...editedData, [key]: { ...editedData[key], inStock: e.target.value } })}
+                                            type={typeof editedData[key] === 'number' ? 'number' : 'text'}
+                                            value={editedData[key]}
+                                            onChange={(e) => setEditedData({ ...editedData, [key]: e.target.value })}
                                         />
-                                        <br />
-                                        <label>Sold:</label>
-                                        <input
-                                            type="number"
-                                            value={editedData[key].sold}
-                                            onChange={(e) => setEditedData({ ...editedData, [key]: { ...editedData[key], sold: e.target.value } })}
-                                        />
-                                    </div>
-                                ) : (
-                                    <input
-                                        type={typeof editedData[key] === 'number' ? 'number' : 'text'}
-                                        value={editedData[key]}
-                                        onChange={(e) => setEditedData({ ...editedData, [key]: e.target.value })}
-                                    />
-                                )}
-                            </p>
-                        ))}
+                                    )}
+                                </p>
+                            ))}
                     </div>
                 )}
             </Modal>
