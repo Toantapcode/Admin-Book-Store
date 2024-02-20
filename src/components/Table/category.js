@@ -11,17 +11,17 @@ const TableCategory = () => {
             render: (text, record, index) => index + 1
         },
         {
-            title: 'Name',
+            title: 'Tên',
             dataIndex: 'name',
             key: 'name'
         },
         {
-            title: 'Description',
+            title: 'Mô tả',
             dataIndex: 'description',
             key: 'description'
         },
         {
-            title: 'Actions',
+            title: 'Hành động',
             render: (text, record) => (
                 <div>
                     <Button type="link" onClick={() => handleView(record)}>Xem</Button>

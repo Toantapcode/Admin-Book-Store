@@ -7,12 +7,12 @@ const TableOrder = ({ dataChanged, setDataChanged }) => {
 
     const columns = [
         {
-            title: 'Full Name',
+            title: 'Tên đầy đủ ',
             dataIndex: ['contact', 'full_name'],
             key: 'full_name',
         },
         {
-            title: 'Phone Number',
+            title: 'Số điện thoại',
             dataIndex: ['contact', 'phone_number'],
             key: 'phone_number',
         },
@@ -22,7 +22,7 @@ const TableOrder = ({ dataChanged, setDataChanged }) => {
             key: 'email',
         },
         {
-            title: 'Address',
+            title: 'Địa chỉ',
             dataIndex: 'address',
             key: 'address',
             render: address => {
@@ -31,7 +31,7 @@ const TableOrder = ({ dataChanged, setDataChanged }) => {
             },
         },
         {
-            title: 'Products',
+            title: 'Sản phẩm',
             dataIndex: 'products',
             key: 'products',
             render: products => (
@@ -45,7 +45,7 @@ const TableOrder = ({ dataChanged, setDataChanged }) => {
             ),
         },
         {
-            title: 'Actions',
+            title: 'Hành động',
             render: (text, record) => (
                 <Button type="link" onClick={() => handleView(record)}>Xem</Button>
             )

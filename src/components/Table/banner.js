@@ -11,23 +11,23 @@ const TableBanner = ({ dataChanged, setDataChanged }) => {
             render: (text, record, index) => index + 1
         },
         {
-            title: 'Name',
+            title: 'Tên',
             dataIndex: 'name',
             key: 'name'
         },
         {
-            title: 'Description',
+            title: 'Mô tả',
             dataIndex: 'description',
             key: 'description'
         },
         {
-            title: 'Image',
+            title: 'Ảnh',
             dataIndex: 'image',
             key: 'image',
             render: (image) => <Image src={image} width={50} />,
         },
         {
-            title: 'Actions',
+            title: 'Hành động',
             render: (text, record) => (
                 <div>
                     <Button type="link" onClick={() => handleView(record)}>Xem</Button>
