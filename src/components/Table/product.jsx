@@ -16,18 +16,18 @@ const TableProduct = () => {
 
     const columns = [
         {
-            title: 'Name',
+            title: 'Tên',
             dataIndex: 'name',
             key: 'name',
             render: (text) => <a>{text}</a>,
         },
         {
-            title: 'Price',
+            title: 'Giá',
             dataIndex: 'price',
             key: 'price',
         },
         {
-            title: 'Quantity',
+            title: 'Số lượng',
             dataIndex: 'quantity',
             key: 'quantity',
             render: (quantity) => (
@@ -37,12 +37,12 @@ const TableProduct = () => {
             ),
         },
         {
-            title: 'Rating',
+            title: 'Đánh giá',
             dataIndex: 'rating',
             key: 'rating',
         },
         {
-            title: 'Image',
+            title: 'Ảnh',
             dataIndex: 'image',
             key: 'image',
             render: (image) => <Image src={image} width={50} />,
@@ -53,7 +53,7 @@ const TableProduct = () => {
             key: 'reviews',
         },
         {
-            title: 'Actions',
+            title: 'Hành động',
             render: (text, record) => (
                 <div>
                     <Button type="link" onClick={() => handleView(record)}>Xem</Button>
@@ -85,7 +85,7 @@ const TableProduct = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://book-store-bqe8.onrender.com/product');
+                const response = await axios.get('https://book-store-bqe8.onrender.com/product?sort=high-low&category=2&');
                 console.log(response.data.data)
                 setData(response.data.data);
                 setDataChanged(false);

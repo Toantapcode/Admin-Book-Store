@@ -14,33 +14,33 @@ const TableUser = ({ dataChanged, setDataChanged }) => {
 
   const columns = [
     {
-      title: 'Name',
+      title: 'Tên',
       dataIndex: 'username',
       key: 'username',
       render: (text) => <a>{text}</a>,
     },
     {
-      title: 'Full Name',
+      title: 'Tên đầy đủ',
       dataIndex: 'full_name',
       key: 'full_name',
       render: (text, record) => `${record.last_name} ${record.first_name}`,
     },
     {
-      title: 'Password',
+      title: 'Mạt khẩu ',
       dataIndex: 'password',
       key: 'password',
       render: (text) => <a>{text}</a>,
     },
 
     {
-      title: 'Phone',
+      title: 'Điện thoại',
       dataIndex: 'telephone',
       key: 'telephone',
       render: (text) => <a>{text}</a>,
     },
 
     {
-      title: 'Actions',
+      title: 'Hành động',
       render: (text, record) => (
         <div>
           <Button type="link" onClick={() => handleView(record)}>Xem</Button>
