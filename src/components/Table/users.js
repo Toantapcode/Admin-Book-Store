@@ -115,12 +115,22 @@ const TableUser = ({ dataChanged, setDataChanged }) => {
         onCancel={handleViewModalCancel}
         footer={null}
       >
-
         {selectedRow && (
           <div>
-            {Object.keys(selectedRow).map((key) => (
-              <p key={key}><strong>{key}:</strong> {selectedRow[key]}</p>
-            ))}
+            {Object.keys(selectedRow).map((key) => {
+              if (key !== 'address') {
+                return (
+                  <p key={key}><strong>{key}:</strong>
+                    <input
+                      type="text"
+                      value={selectedRow[key]}
+                      readOnly={true}
+                    />
+                  </p>
+                );
+              }
+              return null;
+            })}
           </div>
         )}
       </Modal>

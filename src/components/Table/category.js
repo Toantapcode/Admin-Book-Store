@@ -109,7 +109,13 @@ const TableCategory = () => {
                 {selectedRow && (
                     <div>
                         {Object.keys(selectedRow).map((key) => (
-                            <p key={key}><strong>{key}:</strong> {selectedRow[key]}</p>
+                            <p key={key}><strong>{key}:</strong>
+                                <input
+                                    type="text"
+                                    value={selectedRow[key]}
+                                    readOnly={true}
+                                />
+                            </p>
                         ))}
                     </div>
                 )}

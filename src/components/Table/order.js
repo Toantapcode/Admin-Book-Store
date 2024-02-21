@@ -92,7 +92,13 @@ const TableOrder = ({ dataChanged, setDataChanged }) => {
                 {selectedRow && (
                     <div>
                         {Object.keys(selectedRow).map((key) => (
-                            <p key={key}><strong>{key}:</strong> {JSON.stringify(selectedRow[key])}</p>
+                            <p key={key}><strong>{key}:</strong>
+                                <input
+                                    type="text"
+                                    value={selectedRow[key]}
+                                    readOnly={true}
+                                />
+                            </p>
                         ))}
                     </div>
                 )}

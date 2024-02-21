@@ -48,11 +48,6 @@ const TableProduct = () => {
             render: (image) => <Image src={image} width={50} />,
         },
         {
-            title: 'Reviews',
-            dataIndex: 'reviews',
-            key: 'reviews',
-        },
-        {
             title: 'Hành động',
             render: (text, record) => (
                 <div>
@@ -146,7 +141,13 @@ const TableProduct = () => {
                 {selectedRow && (
                     <div>
                         {Object.keys(selectedRow).map((key) => (
-                            <p key={key}><strong>{key}:</strong> {JSON.stringify(selectedRow[key])}</p>
+                            <p key={key}><strong>{key}:</strong>
+                                <input
+                                    type="text"
+                                    value={selectedRow[key]}
+                                    readOnly={true}
+                                />
+                            </p>
                         ))}
                     </div>
                 )}
