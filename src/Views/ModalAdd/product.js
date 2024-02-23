@@ -38,9 +38,9 @@ const AddProductModal = ({ isModalVisible, showModal, handleOk, handleCancel }) 
 
 
   return (
-    <Modal title="Add Product" visible={isModalVisible} onOk={onOkClicked} onCancel={handleCancel}>
+    <Modal title="Thêm sản phẩm" visible={isModalVisible} onOk={onOkClicked} onCancel={handleCancel}>
       <Form form={form} layout="vertical" name="product_form">
-        <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter the product name' }]}>
+        <Form.Item name="name" label="Tên" rules={[{ required: true, message: 'Please enter the product name' }]}>
           <Input />
         </Form.Item>
         <Form.Item name="quantity_inStock" label="Quantity In Stock" rules={[{ type: 'number', min: 0, required: true, message: 'Please enter a valid quantity' }]}>
@@ -49,16 +49,16 @@ const AddProductModal = ({ isModalVisible, showModal, handleOk, handleCancel }) 
         <Form.Item name="quantity_sold" label="Quantity Sold" rules={[{ type: 'number', min: 0, required: true, message: 'Please enter a valid quantity' }]}>
           <InputNumber />
         </Form.Item>
-        <Form.Item name="price" label="Price" rules={[{ type: 'number', min: 0, required: true, message: 'Please enter a valid price' }]}>
+        <Form.Item name="price" label="Giá" rules={[{ type: 'number', min: 0, required: true, message: 'Please enter a valid price' }]}>
           <InputNumber />
         </Form.Item>
-        <Form.Item name="rating" label="Rating" rules={[{ type: 'number', min: 0, required: true, message: 'Please enter a valid rating' }]}>
+        <Form.Item name="rating" label="Đánh giá" rules={[{ type: 'number', min: 0, required: true, message: 'Please enter a valid rating' }]}>
           <InputNumber />
         </Form.Item>
-        <Form.Item name="description" label="Description" rules={[{ required: true, message: 'Please enter a valid description' }]}>
+        <Form.Item name="description" label="Mô tả" rules={[{ required: true, message: 'Please enter a valid description' }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="image" label="Image">
+        <Form.Item name="image" label="Ảnh">
           <Upload
             name="avatar"
             listType="picture-card"

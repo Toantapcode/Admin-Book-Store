@@ -1,101 +1,169 @@
-import React, { useState } from "react";
-import { Modal, Form, Input, InputNumber, Upload } from "antd";
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from "react";
+import { Modal, Form, Input, InputNumber, Table, Button, Select } from "antd";
+import axiosInstance from "../../components/Request";
+
+const { Option } = Select;
 
 const AddOrderModal = ({ isModalVisible, showModal, handleOk, handleCancel }) => {
     const [form] = Form.useForm();
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchResult, setSearchResult] = useState([]);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
 
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const response = await axiosInstance.get(`https://book-store-bqe8.onrender.com/product/search/${searchTerm}`);
+                setSearchResult(response.data);
+            } catch (error) {
+                console.error("Error fetching product:", error);
+            }
+        };
+
+        if (searchTerm !== "") {
+            fetchProduct();
+        }
+    }, [searchTerm]);
+
+    const handleProductSearch = () => {
+        setSearchTerm(form.getFieldValue("productName"));
+    };
+
+    const handleProductSelection = (product) => {
+        setSelectedProduct(product);
+    };
+
+    const handleUserSearch = async () => {
+        try {
+            const userId = form.getFieldValue("userId");
+            const response = await axiosInstance.get(`https://book-store-bqe8.onrender.com/user/getUserById/${userId}`);
+            setSelectedUser(response.data);
+
+            const fullName = `${response.data.first_name} ${response.data.last_name}`;
+            // Set user data to form fields
+            form.setFieldsValue({
+                'contact.full_name': fullName,
+                'contact.phone_number': response.data.telephone,
+                'contact.email': response.data.email,
+                'address': response.data.address ? response.data.address.address : ''
+            });
+        } catch (error) {
+            console.error("Error fetching user:", error);
+        }
+    };
 
     const onOkClicked = async () => {
         try {
             const values = await form.validateFields();
-            handleOk(values);
-            console.log('t', values);
+            // Gửi thông tin đơn hàng qua API
+            const orderData = {
+                contact: {
+                    full_name: selectedUser ? `${selectedUser.last_name} ${selectedUser.first_name}` : '',
+                    phone_number: selectedUser ? selectedUser.telephone : '',
+                    email: selectedUser ? selectedUser.email : '',
+                },
+                address: {
+                    address: selectedUser.address ? selectedUser.address.address : '',
+                    ward: selectedUser.address ? selectedUser.address.ward : '',
+                    district: selectedUser.address ? selectedUser.address.district : '',
+                    province: selectedUser.address ? selectedUser.address.province : '',
+                },
+
+                products: [{
+                    product_id: selectedProduct ? selectedProduct.product_id : '',
+                    price: selectedProduct ? selectedProduct.price : '',
+                    quantity: values.quantity,
+                }],
+                payment: values.payment,
+                status: values.status
+            };
+            console.log(orderData)
+
+            handleOk(orderData);
         } catch (error) {
             console.error("Validation failed:", error);
         }
     };
 
 
-
     return (
-        <Modal title="Add Order" visible={isModalVisible} onOk={onOkClicked} onCancel={handleCancel}>
+        <Modal title="Thêm đơn hàng" visible={isModalVisible} onOk={onOkClicked} onCancel={handleCancel}>
             <Form form={form} layout="vertical" name="order_form">
-                {/* Contact */}
-                <Form.Item name={['contact', 'full_name']} label="Full Name" rules={[{ required: true, message: 'Please enter the full name' }]}>
-                    <Input />
+                <Form.Item label="Tên đầy đủ" >
+                    <Input value={selectedUser ? `${selectedUser.last_name} ${selectedUser.first_name} ` : ''} readOnly />
                 </Form.Item>
-                <Form.Item name={['contact', 'phone_number']} label="Phone Number" rules={[{ required: true, message: 'Please enter a valid phone number' }]}>
-                    <Input />
+                <Form.Item label="Số điện thoại">
+                    <Input value={selectedUser ? selectedUser.telephone : ''} readOnly />
                 </Form.Item>
-                <Form.Item name={['contact', 'email']} label="Email" rules={[{ required: true, type: 'email', message: 'Please enter a valid email' }]}>
-                    <Input />
+                <Form.Item label="Email">
+                    <Input value={selectedUser ? selectedUser.email : ''} readOnly />
                 </Form.Item>
-
-                {/* Address */}
-                <Form.Item name={['address', 'address']} label="Address" rules={[{ required: true, message: 'Please enter the address' }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name={['address', 'ward']} label="Ward" rules={[{ required: true, message: 'Please enter the ward' }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name={['address', 'district']} label="District" rules={[{ required: true, message: 'Please enter the district' }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name={['address', 'province']} label="Province" rules={[{ required: true, message: 'Please enter the province' }]}>
-                    <Input />
+                <Form.Item label="Địa chỉ">
+                    <Input value={selectedUser ? `${selectedUser.address ? selectedUser.address.address : ''}, ${selectedUser.address ? selectedUser.address.ward : ''}, ${selectedUser.address ? selectedUser.address.district : ''}, ${selectedUser.address ? selectedUser.address.province : ''}` : ''} readOnly />
                 </Form.Item>
 
-                {/* Products */}
-                {/* Products */}
-                <Form.List name={['products']} initialValue={[{ product_id: 0, quantity: 0, price: 0 }]}>
-                    {(fields, { add, remove }) => (
-                        <>
-                            {fields.map(({ key, name, fieldKey, ...restField }) => (
-                                <div key={key}>
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, 'product_id']}
-                                        fieldKey={[fieldKey, 'product_id']}
-                                        label="Product ID"
-                                        rules={[{ required: true, message: 'Please enter the product ID' }]}
-                                    >
-                                        <InputNumber />
-                                    </Form.Item>
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, 'quantity']}
-                                        fieldKey={[fieldKey, 'quantity']}
-                                        label="Quantity"
-                                        rules={[{ required: true, message: 'Please enter the quantity' }]}
-                                    >
-                                        <InputNumber />
-                                    </Form.Item>
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, 'price']}
-                                        fieldKey={[fieldKey, 'price']}
-                                        label="Price"
-                                        rules={[{ required: true, message: 'Please enter the price' }]}
-                                    >
-                                        <InputNumber />
-                                    </Form.Item>
-                                    <button type="button" onClick={() => remove(name)}>Remove Product</button>
-                                </div>
-                            ))}
-                            <Form.Item>
-                                <button type="button" onClick={() => add()}>Add Product</button>
-                            </Form.Item>
-                        </>
-                    )}
-                </Form.List>
 
-                {/* Payment */}
+
+
+
+                <Form.Item label="Tên sản phẩm">
+                    <Form.Item name="productName" noStyle>
+                        <Input style={{ width: 'calc(100% - 100px)', marginRight: '8px' }} />
+                    </Form.Item>
+                    <Button type="primary" onClick={handleProductSearch}>
+                        Tìm sản phẩm
+                    </Button>
+                </Form.Item>
+
+                <Table
+                    columns={[
+                        { title: "ID", dataIndex: "id", key: "id" },
+                        { title: "Tên", dataIndex: "name", key: "name" },
+                        { title: "Giá", dataIndex: "price", key: "price" },
+                        {
+                            title: "Chọn",
+                            render: (_, record) => (
+                                <Button type="primary" onClick={() => handleProductSelection(record)}>
+                                    Chọn
+                                </Button>
+                            ),
+                        },
+                    ]}
+                    dataSource={searchResult}
+                    pagination={false}
+                />
+
+                {selectedProduct && (
+                    <>
+                        <Form.Item label="Chọn sản phẩm">
+                            <Input value={selectedProduct.name} readOnly />
+                        </Form.Item>
+                        <Form.Item label="Giá">
+                            <InputNumber value={selectedProduct.price} readOnly />
+                        </Form.Item>
+                    </>
+                )}
+
+                <Form.Item label=" ID người dùng">
+                    <Form.Item name="userId" noStyle>
+                        <InputNumber style={{ width: 'calc(100% - 100px)', marginRight: '8px' }} />
+                    </Form.Item>
+                    <Button type="primary" onClick={handleUserSearch}>
+                        Chọn người dùng
+                    </Button>
+                </Form.Item>
+
+
+
+                <Form.Item name="quantity" label="Quantity" rules={[{ required: true, message: 'Please enter the quantity' }]}>
+                    <InputNumber />
+                </Form.Item>
+
                 <Form.Item name="payment" label="Payment" rules={[{ required: true, message: 'Please enter the payment method' }]}>
                     <Input />
                 </Form.Item>
 
-                {/* Status */}
                 <Form.Item name="status" label="Status" rules={[{ required: true, message: 'Please enter the status' }]}>
                     <Input />
                 </Form.Item>

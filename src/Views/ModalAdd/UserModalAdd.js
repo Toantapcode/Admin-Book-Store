@@ -3,7 +3,7 @@ import { Modal, Form, Input, Select, DatePicker } from 'antd';
 
 const UserModal = ({ isModalVisible, showModal, handleOk, handleCancel }) => {
   const [form] = Form.useForm();
-  
+
 
   const onOkClicked = async () => {
     try {
@@ -17,7 +17,7 @@ const UserModal = ({ isModalVisible, showModal, handleOk, handleCancel }) => {
 
 
   return (
-    <Modal title="Add User" visible={isModalVisible} onOk={onOkClicked} onCancel={handleCancel}>
+    <Modal title="Thêm người dùng " visible={isModalVisible} onOk={onOkClicked} onCancel={handleCancel}>
       <Form form={form} layout="vertical">
         <Form.Item name="username" label="Name" rules={[{ required: true, message: 'Please enter a name' }]}>
           <Input />
@@ -29,7 +29,7 @@ const UserModal = ({ isModalVisible, showModal, handleOk, handleCancel }) => {
           <Input />
         </Form.Item>
         <Form.Item name="password" label="Password" rules={[{ required: true, message: 'Please select a password' }]}>
-        <Input />
+          <Input />
         </Form.Item>
         <Form.Item name="telephone" label="Phone" rules={[{ required: true, message: 'Please enter a phone number' }]}>
           <Input />

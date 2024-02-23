@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Table, Button, Modal } from 'antd';
+import { Table, Image, Button, Modal, Checkbox } from 'antd';
 import axiosInstance from '../Request';
 import axios from 'axios';
 
@@ -11,6 +11,30 @@ const TableUser = ({ dataChanged, setDataChanged }) => {
   const [viewModalVisible, setViewModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editedData, setEditedData] = useState(null);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const handleRowSelectChange = (selectedRowKeys) => {
+    setSelectedRowKeys(selectedRowKeys);
+  };
+
+  const handleCheckboxChange = (userId, checked) => {
+    if (checked) {
+      setSelectedRowKeys([...selectedRowKeys, userId]);
+    } else {
+      setSelectedRowKeys(selectedRowKeys.filter(id => id !== userId));
+    }
+  };
+
+  const handleDeleteSelected = async () => {
+    try {
+        await Promise.all(selectedRowKeys.map(id => axiosInstance.delete(`https://book-store-bqe8.onrender.com/order/${id}`)));
+        setDataChanged(true);
+        setSelectedRowKeys([]);
+    } catch (error) {
+        console.error('Error deleting data: ', error);
+    }
+};
 
   const columns = [
     {

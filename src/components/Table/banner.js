@@ -1,11 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { Table, Image, Button, Modal } from 'antd';
+import { Table, Image, Button, Modal, Checkbox } from 'antd';
 import axios from 'axios';
 import axiosInstance from "../Request";
 
 const TableBanner = ({ dataChanged, setDataChanged }) => {
 
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+    const handleRowSelectChange = (selectedRowKeys) => {
+        setSelectedRowKeys(selectedRowKeys);
+    };
+
+    const handleCheckboxChange = (bannerId, checked) => {
+        if (checked) {
+            setSelectedRowKeys([...selectedRowKeys, bannerId]);
+        } else {
+            setSelectedRowKeys(selectedRowKeys.filter(id => id !== bannerId));
+        }
+    };
+
+    const handleDeleteSelected = async () => {
+        try {
+            await Promise.all(selectedRowKeys.map(id => axiosInstance.delete(`https://book-store-bqe8.onrender.com/banner/delete/${id}`)));
+            setDataChanged(true);
+            setSelectedRowKeys([]);
+        } catch (error) {
+            console.error('Error deleting data: ', error);
+        }
+    };
+
     const columns = [
+        {
+            title: 'Chọn',
+            dataIndex: 'banner_id',
+            render: (_, record) => (
+                <Checkbox onChange={(e) => handleCheckboxChange(record.banner_id, e.target.checked)} />
+            ),
+        },
         {
             title: 'STT',
             render: (text, record, index) => index + 1
@@ -109,6 +140,7 @@ const TableBanner = ({ dataChanged, setDataChanged }) => {
 
     return (
         <div>
+            <Button type="primary" onClick={handleDeleteSelected} disabled={selectedRowKeys.length === 0}>Xóa đã chọn</Button>
             <Table columns={columns} dataSource={data} />
 
             <Modal

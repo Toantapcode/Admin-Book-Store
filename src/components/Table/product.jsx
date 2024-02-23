@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Image, Button, Modal } from 'antd';
+import { Table, Image, Button, Modal, Checkbox } from 'antd';
 import axios from 'axios'
 import axiosInstance from '../Request'
 
@@ -7,6 +7,7 @@ import axiosInstance from '../Request'
 
 const TableProduct = () => {
     const [data, setData] = useState([]);
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [selectedRow, setSelectedRow] = useState(null);
     const [viewModalVisible, setViewModalVisible] = useState(false);
     const [editModalVisible, setEditModalVisible] = useState(false);
@@ -15,6 +16,13 @@ const TableProduct = () => {
 
 
     const columns = [
+        {
+            title: 'Chọn',
+            dataIndex: 'product_id',
+            render: (_, record) => (
+                <Checkbox onChange={(e) => handleCheckboxChange(record.product_id, e.target.checked)} />
+            ),
+        },
         {
             title: 'Tên',
             dataIndex: 'name',
@@ -62,18 +70,32 @@ const TableProduct = () => {
 
     ];
 
-    // const handleDelete = async (key) => {
-    //     try {
-    //         await axiosInstance.delete(`https://book-store-bqe8.onrender.com/product/delete/${key}`);
-    //         const newData = data.filter((item) => item.product_id !== key);
-    //         console.log({ data, key })
-    //         setData(newData);
-    //     }
-    //     catch (error) {
-    //         console.error('Error fetching data: ', error);
-    //     }
-
-    // };
+    const handleCheckboxChange = (productId, checked) => {
+        if (checked) {
+            setSelectedRowKeys([...selectedRowKeys, productId]);
+        } else {
+            setSelectedRowKeys(selectedRowKeys.filter(key => key !== productId));
+        }
+    };
+    const handleRowSelectChange = (selectedRowKeys, selectedRows) => {
+        setSelectedRowKeys(selectedRowKeys);
+    };
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: handleRowSelectChange,
+    };
+    const handleDeleteSelected = async () => {
+        try {
+            await Promise.all(selectedRowKeys.map(id => axiosInstance.delete(`https://book-store-bqe8.onrender.com/product/delete/${id}`)));
+            setData(data.filter(item => !selectedRowKeys.includes(item.product_id))); 
+            setSelectedRowKeys([]); 
+        } catch (error) {
+            console.error('Error deleting data: ', error);
+        }
+    };
+    const deleteSelectedButton = (
+        <Button type="primary" onClick={handleDeleteSelected} disabled={selectedRowKeys.length === 0}>Xóa đã chọn</Button>
+    );
 
 
 
@@ -130,6 +152,7 @@ const TableProduct = () => {
 
     return (
         <div>
+        {deleteSelectedButton}
             <Table columns={columns} dataSource={data} style={{ marginTop: 20 }} />
             <Modal
                 title="Thông tin chi tiết"

@@ -20,6 +20,16 @@ function getItem(label, key, icon, children, type) {
   };
 }
 
+const items = [
+  getItem('Users', 'users', <PieChartOutlined />),
+  getItem('Category', 'category', <DesktopOutlined />),
+  getItem('Product', 'product', <ContainerOutlined />),
+  getItem('Order', 'order', <DesktopOutlined />),
+  getItem('Review', 'review', <ContainerOutlined />),
+  getItem('Banner', 'banner', <ContainerOutlined />),
+];
+
+
 const Home = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -72,14 +82,6 @@ const Home = () => {
   };
 
 
-  const items = [
-    getItem('Users', 'users', <PieChartOutlined />),
-    getItem('Category', 'category', <DesktopOutlined />),
-    getItem('Product', 'product', <ContainerOutlined />),
-    getItem('Order', 'order', <DesktopOutlined />),
-    getItem('Review', 'review', <ContainerOutlined />),
-    getItem('Banner', 'banner', <ContainerOutlined />),
-  ];
 
 
 
@@ -131,12 +133,3 @@ const Home = () => {
 };
 
 export default Home;
-{/* <Menu
-defaultSelectedKeys={['users']}
-defaultOpenKeys={['Users']}
-onSelect={setItem}
-mode="inline"
-theme="dark"
-inlineCollapsed={collapsed}
-items={items}
-/> */}

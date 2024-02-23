@@ -37,7 +37,7 @@ const AddReviewModal = ({ isModalVisible, showModal, handleOk, handleCancel }) =
 
 
     return (
-        <Modal title="Add Review" visible={isModalVisible} onOk={onOkClicked} onCancel={handleCancel}>
+        <Modal title="Thêm Review" visible={isModalVisible} onOk={onOkClicked} onCancel={handleCancel}>
             <Form form={form} layout="vertical" name="eeview_form">
                 <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter the banner name' }]}>
                     <Input />
